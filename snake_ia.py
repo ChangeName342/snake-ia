@@ -10,7 +10,6 @@ import csv
 import pygame
 
 def wait_for_start(screen, font):
-    import pygame
     waiting = True
     screen.fill((0,0,0))
     text = font.render("Press SPACE to start", True, (255,255,255))
@@ -61,7 +60,7 @@ def main():
 
     # Inicializar visualización
     if args.vis:
-        vis = Visual(cell=40, size=env.size, fps=5)
+        vis = Visual(cell=40, size=env.size, fps=10)
         wait_for_start(vis.screen, pygame.font.SysFont('Arial', 30))
     else:
         vis = None
@@ -74,7 +73,11 @@ def main():
 
     # Evaluación experto
     print("\nEVALUACIÓN: experto (A*)")
+    if args.vis:
+        env.agent_name = "A*"
     apples, steps, elapsed, reason = env.run_episode(expert_agent, render=not args.vis, vis=vis)
+    if args.vis:
+        env.elapsed = elapsed
     print(f"Experto terminó: apples={apples}, steps={steps}, tiempo={elapsed:.4f}s, reason={reason}")
 
     with open(metrics_file, 'a', newline='') as f:
@@ -84,7 +87,11 @@ def main():
     # Evaluación modelo
     print("\nEVALUACIÓN: modelo (PyTorch)")
     model_agent = model_agent_factory(model)
+    if args.vis:
+        env.agent_name = "Modelo"
     apples_m, steps_m, elapsed_m, reason_m = env.run_episode(model_agent, render=not args.vis, vis=vis)
+    if args.vis:
+        env.elapsed = elapsed_m
     print(f"Modelo terminó: apples={apples_m}, steps={steps_m}, tiempo={elapsed_m:.4f}s, reason={reason_m}")
 
     with open(metrics_file, 'a', newline='') as f:
@@ -96,6 +103,8 @@ def main():
     times = []
     for i in range(args.eval_runs):
         envt = SnakeEnv(size=10, max_apples=35, seed=(args.seed or 0) + 100 + i)
+        if args.vis:
+            envt.agent_name = "Modelo"
         a, s, t, r = envt.run_episode(model_agent, render=False, vis=None)
         print(f" run {i+1}: apples={a}, steps={s}, tiempo={t:.4f}s, reason={r}")
         times.append(t)
