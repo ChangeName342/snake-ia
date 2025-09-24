@@ -129,10 +129,24 @@ rene_miau.mp3: sonido de game over.
 📦 Otros archivos
 8) requirements.txt
 Lista de dependencias necesarias para correr el proyecto:
-numpy
-torch
-pygame
+asgiref==3.9.1
+Django==5.2.5
+filelock==3.19.1
+fsspec==2025.9.0
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+mpmath==1.3.0
+networkx==3.5
+numpy==2.3.3
+pygame==2.6.1
+setuptools==80.9.0
+sqlparse==0.5.3
+sympy==1.14.0
+torch==2.8.0
+typing_extensions==4.15.0
+tzdata==2025.2
 Rol: asegura que cualquier usuario pueda instalar el entorno correcto.
+Para instalar todas las dependencias necesarias, es necesario ejecutar el siguiente comando: pip install -r requirements.txt
 
 Métricas y evaluación:
 
